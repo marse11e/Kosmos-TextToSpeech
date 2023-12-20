@@ -12,7 +12,6 @@ class Text_to_speech(models.Model):
     )
     file_name = models.CharField(
         max_length=200,
-        unique=True,
         verbose_name="Имя файла",
         help_text="Укажите имя аудиофайла.",
     )
@@ -58,3 +57,5 @@ class Text_to_speech(models.Model):
     class Meta:
         verbose_name = "Текст в речь"
         verbose_name_plural = "Тексты в речь"
+
+

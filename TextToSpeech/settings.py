@@ -22,6 +22,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-zagjcb38jopl8$)744522@ei^^(+58294cir3g-4r#71!-qi%)'
 
+TOKENBOT = '6658972837:AAHKOOe35VWiTBg9nG8zqCOQIFnEdX8wMWY'
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -43,7 +45,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     
-    'main'
+    'main',
+    'telegrambot',
 ]
 
 MIDDLEWARE = [
