@@ -123,6 +123,47 @@ def profile(message):
             reply_markup=get_main_keyboard())
     
 
+def buy_attempts(message):
+    if message.text.lower() == 'отмена':
+        bot.send_message(message.chat.id, 'Вы отменили действие!', reply_markup=get_main_keyboard())
+    elif message.text.lower() == 'купить попытку':
+        bot.send_message(message.chat.id, "Отлично! Теперь оплатите попытки.")
+        initiate_payment(message.chat.id)
+
+
+def initiate_payment(chat_id):
+    bot.send_invoice(
+        chat_id,
+        title='Покупка попыток',
+        description='Купите дополнительные попытки для озвучивания текстов.',
+        payload='buy_attempts',
+        provider_token='',
+        currency='KZT',
+        prices=[
+            types.LabeledPrice(label='Попытка 10шт', amount=100),
+        ],
+        start_parameter='buy_attempts',
+    )
+    
+
+@bot.message_handler(content_types=['successful_payment'])
+def successful_payment(message):
+    tuser = TelegramUser.objects.get(user_id=message.from_user.id)
+    try_transform = TryTransform.objects.get(tuser=tuser)
+    
+    try_transform.count += 10
+    try_transform.save()
+    
+    bot.send_message(message.chat.id, 'Спасибо за оплату! Ваши попытки добавлены.',
+                                                        reply_markup=get_main_keyboard())
+
+
+@bot.message_handler(func=lambda message: message.text.lower() == 'попытки')
+def messageuser(message):
+    bot.send_message(message.chat.id, "Выберите действие!", reply_markup=get_buy_attempts())
+    bot.register_next_step_handler(message, buy_attempts)
+
+    
 def run_bot():
     try:
         logger = logging.getLogger(__name__)
